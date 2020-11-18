@@ -1,23 +1,24 @@
 const db = require('../models')
-const path = require('path');
-const express = require('express')
-const app = express()
+const router = require('express').Router();
 
-app.get("/api/workouts",(req, res) => {
+router.get("/api/workouts",(req, res) => {
   db.Workout.find({}, (err, data) => {
     if (err) throw err;
     res.json(data)
+    console.log(data)
   })
 })
 
-app.post("/api/workouts", (req, res) => {
-  db.Workout.create({}, (err, data) => {
+router.post("/api/workouts", (req, res) => {
+  let workout = req.body
+  console.log(workout)
+  db.Workout.create({workout}, (err, data) => {
     if (err) throw err;
     res.json(data)
   })
 })
 
-app.put("/api/workouts/:id", (req, res) => {
+router.put("/api/workouts/:id", (req, res) => {
   db.Workout.findOneAndUpdate(
     {_id: req.params.id},
     { $push: {exercises: req.body}},
@@ -28,11 +29,12 @@ app.put("/api/workouts/:id", (req, res) => {
   )
 })
 
-app.get("/api/workouts/range", (req,res) => {
+router.get("/api/workouts/range", (req,res) => {
  db.Workout.find({}, (err, data) => {
    if(err) throw err;
    res.json(data)
  })
+ .limit(7)
 })
 
-module.exports = (app)
+module.exports = router

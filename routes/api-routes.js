@@ -4,7 +4,10 @@ const express = require('express')
 const app = express()
 
 app.get("/api/workouts",(req, res) => {
-  
+  db.Workout.find({}, (err, data) => {
+    if (err) throw err;
+    res.json(data)
+  })
 })
 
 app.post("/api/workouts", (req, res) => {
